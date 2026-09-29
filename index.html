@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Negros Occidental Gas Price Map</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+  /* Map iframe inside the card */
+  .map-card {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .map-card iframe {
+    display: block;
+    width: 100%;
+    height: 600px;
+    border: 0;
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo">⛽</span>
+    <div>
+      <h1>Negros Occidental Gas Price Map</h1>
+      <p>Compare fuel prices. Save more. Drive smarter.</p>
+    </div>
+  </div>
+
+  <nav>
+    <button class="active" data-go="map">🗺 Map</button>
+    <button data-go="compare">⚖ Compare</button>
+    <button data-go="history">📈 Price History</button>
+    <button id="navReport">✎ Report Price</button>
+  </nav>
+</header>
+
+<div class="layout">
+
+  <!-- Filters -->
+  <aside class="card filters">
+
+    <div class="search">
+      <input id="search" placeholder="Search station or city...">
+      <button id="clearSearch">✕</button>
+    </div>
+
+    <h3>📍 City / Municipality</h3>
+
+    <select id="city">
+      <option value="">All Cities / Municipalities</option>
+    </select>
+
+    <h3>⛽ Fuel Type</h3>
+
+    <label>
+      <input type="checkbox" class="fuel" value="g91" checked>
+      <i class="dot green"></i>
+      Gasoline 91
+    </label>
+
+    <label>
+      <input type="checkbox" class="fuel" value="g95" checked>
+      <i class="dot red"></i>
+      Gasoline 95
+    </label>
+
+    <label>
+      <input type="checkbox" class="fuel" value="d" checked>
+      <i class="dot yellow"></i>
+      Diesel
+    </label>
+
+    <h3>Price Range (₱/L)</h3>
+
+    <div class="range">
+      <input type="range" id="minP" min="50" max="80" value="50">
+      <input type="range" id="maxP" min="50" max="80" value="80">
+    </div>
+
+    <div class="range-labels">
+      <span id="minL">50</span>
+      <span id="maxL">80</span>
+    </div>
+
+    <h3>Sort by</h3>
+
+    <select id="sort">
+      <option value="asc">Cheapest Price</option>
+      <option value="desc">Highest Price</option>
+      <option value="name">Station Name</option>
+    </select>
+
+    <div class="legend">
+      <h4>Price Marker Legend</h4>
+
+      <p>
+        <i class="dot green"></i>
+        Cheapest
+      </p>
+
+      <p>
+        <i class="dot yellow"></i>
+        Average
+      </p>
+
+      <p>
+        <i class="dot red"></i>
+        More Expensive
+      </p>
+    </div>
+
+  </aside>
+
+
+  <!-- Main content -->
+  <main>
+
+    <!-- MAP BOX -->
+    <div class="card map-card">
+
+      <iframe
+        src="negros-map.html"
+        width="100%"
+        height="600"
+        style="border:0"
+        loading="lazy">
+      </iframe>
+
+    </div>
+
+
+    <!-- Gas Stations Table -->
+    <section class="card" id="tableWrap">
+
+      <div class="table-head">
+
+        <h3>⛽ Gas Stations Nearby</h3>
+
+        <span>
+          <span id="showing"></span>
+          <a href="#" id="viewAll">View All</a>
+        </span>
+
+      </div>
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Station Name</th>
+            <th>City / Municipality</th>
+            <th>Gas 91</th>
+            <th>Gas 95</th>
+            <th>Diesel</th>
+            <th>Updated</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="rows"></tbody>
+
+      </table>
+
+    </section>
+
+  </main>
+
+
+  <!-- Details -->
+  <aside class="side">
+
+    <section class="card detail" id="detail"></section>
+
+
+    <!-- Price History -->
+    <section class="card" id="history">
+
+      <h3>
+        Price History
+        <small>(Gasoline 91)</small>
+      </h3>
+
+      <div id="chart"></div>
+
+    </section>
+
+
+    <!-- Compare -->
+    <section class="card" id="compare">
+
+      <h3>
+        ⚖ Compare Fuel Prices
+        <small>Select up to 3 stations</small>
+      </h3>
+
+      <table class="cmp">
+
+        <thead>
+          <tr>
+            <th>Station</th>
+            <th>Gas 91</th>
+            <th>Gas 95</th>
+            <th>Diesel</th>
+          </tr>
+        </thead>
+
+        <tbody id="cmpRows"></tbody>
+
+      </table>
+
+    </section>
+
+  </aside>
+
+</div>
+
+
+<!-- Leaflet -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Existing files -->
+<script src="boundary.js"></script>
+<script src="data.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
