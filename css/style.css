@@ -43,7 +43,8 @@ header{
   box-shadow:0 2px 12px rgba(10,20,45,.35);
 }
 .brand{display:flex;align-items:center;gap:14px}
-.logo{display:grid;place-items:center;width:46px;height:46px;font-size:26px;border-radius:12px;background:rgba(255,255,255,.12)}
+.logo{display:block;flex:none;width:56px;height:56px}
+.logo img{display:block;width:100%;height:100%;object-fit:contain}
 h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-.01em}
 .brand p{margin:2px 0 0;color:#aebbd6;font-size:13px}
 nav{display:flex;gap:4px;flex-wrap:wrap}
@@ -93,7 +94,7 @@ select:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-
 .dot{display:inline-block;flex:none;width:11px;height:11px;border-radius:50%}
 .dot.green{background:var(--green)}.dot.red{background:var(--red)}.dot.yellow{background:var(--yellow)}
 
-/* dual range slider (--lo / --hi are set by script.js, default full range) */
+/* dual range slider (--lo / --hi are set by table.js, default full range) */
 .range{position:relative;height:24px;margin:4px 6px 0}
 .range::before{
   content:""; position:absolute; left:0; right:0; top:10px; height:4px; border-radius:2px;
@@ -209,4 +210,3 @@ td.p .dot{width:8px;height:8px;margin-right:7px;vertical-align:1px}
   nav button{white-space:nowrap}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
-

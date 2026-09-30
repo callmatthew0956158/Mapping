@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Negros Occidental Gas Price Map</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <link rel="stylesheet" href="css/style.css">
@@ -11,6 +12,15 @@
 <style>
   .map-card { padding: 0; overflow: hidden; }
   #map { width: 100%; height: 600px; }
+
+  /* Price change under each price */
+  .chg { display: block; font-size: 11px; font-weight: 600; }
+  .chg.down { color: var(--green); }
+  .chg.up { color: var(--red); }
+
+  /* Logo: forces the small size even if style.css is old or cached */
+  .logo { display: block; flex: none; width: 56px; height: 56px; background: none; border-radius: 0; }
+  .logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
 </style>
 </head>
 
@@ -18,7 +28,7 @@
 
 <header>
   <div class="brand">
-    <span class="logo">⛽</span>
+    <span class="logo"><img src="images/gaslogo.png" alt="Negros Occidental Gas Price Map logo" width="56" height="56"></span>
     <div>
       <h1>Negros Occidental Gas Price Map</h1>
       <p>Compare fuel prices. Save more. Drive smarter.</p>
@@ -72,13 +82,13 @@
     <h3>Price Range (₱/L)</h3>
 
     <div class="range">
-      <input type="range" id="minP" min="50" max="80" value="50">
-      <input type="range" id="maxP" min="50" max="80" value="80">
+      <input type="range" id="minP" min="50" max="130" value="50">
+      <input type="range" id="maxP" min="50" max="130" value="130">
     </div>
 
     <div class="range-labels">
       <span id="minL">50</span>
-      <span id="maxL">80</span>
+      <span id="maxL">130</span>
     </div>
 
     <h3>Sort by</h3>
@@ -171,10 +181,10 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-<script src="/data/data.js"></script>
+<script src="data/data.js"></script>
 <script src="maps/map.js"></script>
 <script src="data/table.js"></script>
-<!-- Keep your own gas/script.js below only if it does something else (detail panel, compare, chart).
+<!-- Keep maps/script.js only if it does something else (detail panel, compare, chart).
      If it also fills #rows or handles the filters, remove that part so nothing runs twice. -->
 <script src="maps/script.js"></script>
 
