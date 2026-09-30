@@ -1,4 +1,5 @@
 // Gas Stations Nearby: table, map pins, and sidebar filters
+// Stations are loaded from the database through php/stations.php
 (function () {
   "use strict";
 
@@ -8,18 +9,20 @@
   const viewAllEl = $("viewAll");
   if (!rowsEl) return;
 
+  const STATIONS_URL = "database/stations.php"; // path is relative to index.html
   const LIMIT = 10;
-  const PRICE_MIN = 50, PRICE_MAX = 80;
+  const PRICE_MIN = 50, PRICE_MAX = 130;    // must match the sliders in index.html
   const COLORS = { cheap: "#0f9d3f", mid: "#f5a300", high: "#e0202b" };
   const FUEL_COLS = { g91: 3, g95: 4, d: 5 }; // column index in the table header
 
-  const all = typeof STATIONS !== "undefined" && Array.isArray(STATIONS) ? STATIONS : [];
+  let all = []; // filled from the database by loadStations()
   const map = window.gasMap || null;
   const layer = map ? L.layerGroup().addTo(map) : null;
   const markers = new Map();
 
   let showAll = false;
   let userLoc = null;
+  let loaded = false;
 
   const esc = (t) =>
     String(t ?? "").replace(/[&<>"']/g, (c) => (
@@ -126,9 +129,11 @@
     const hide = (fuel) => (fuelsOn.includes(fuel) ? "" : " fuelhide");
 
     if (!list.length) {
-      rowsEl.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:28px;color:var(--muted)">
-        ${all.length ? "No stations match your filters." : "No gas stations yet."}</td></tr>`;
-      showingEl.textContent = `Showing 0 of ${all.length} stations`;
+      let text = "No stations match your filters.";
+      if (!loaded) text = "Loading stations...";
+      else if (!all.length) text = "No gas stations yet.";
+      rowsEl.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:28px;color:var(--muted)">${text}</td></tr>`;
+      showingEl.textContent = loaded ? `Showing 0 of ${all.length} stations` : "";
       viewAllEl.style.display = "none";
       return;
     }
@@ -175,10 +180,42 @@
     renderTable(list);
   }
 
-  // Fill the city dropdown from the data
-  [...new Set(all.map((s) => s.city).filter(Boolean))].sort().forEach((c) => {
-    $("city").add(new Option(c, c));
-  });
+  // Fill the city dropdown from the data (safe to call again after a reload)
+  function fillCities() {
+    const sel = $("city");
+    const keep = sel.value;
+    while (sel.options.length > 1) sel.remove(1);
+    [...new Set(all.map((s) => s.city).filter(Boolean))].sort().forEach((c) => {
+      sel.add(new Option(c, c));
+    });
+    sel.value = keep; // stays on "All" if the old city no longer exists
+  }
+
+  // Load stations from the database
+  function loadStations() {
+    return fetch(STATIONS_URL, { cache: "no-store" })
+      .then((r) => {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then((data) => {
+        if (!Array.isArray(data)) throw new Error((data && data.error) || "Bad response");
+        all = data;
+        loaded = true;
+        fillCities();
+        render();
+      })
+      .catch((err) => {
+        console.error("Could not load stations:", err);
+        if (!all.length) {
+          rowsEl.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:28px;color:#b00020">
+            Couldn't load stations from the database. Check that Apache and MySQL are running,
+            then open <b>${esc(STATIONS_URL)}</b> in the browser to see the error.</td></tr>`;
+          showingEl.textContent = "";
+          viewAllEl.style.display = "none";
+        }
+      });
+  }
 
   // Table buttons
   rowsEl.addEventListener("click", (e) => {
@@ -221,6 +258,11 @@
     render();
   });
 
+  // Start
   syncRange();
-  render();
+  render();          // shows "Loading stations..." until the data arrives
+  loadStations();
+
+  // Pick up newly added stations when you switch back to this tab
+  window.addEventListener("focus", loadStations);
 })();
