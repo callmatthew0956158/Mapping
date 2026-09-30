@@ -5,22 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Negros Occidental Gas Price Map</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <link rel="stylesheet" href="css/style.css">
 
 <style>
-  /* Map iframe inside the card */
-  .map-card {
-    padding: 0;
-    overflow: hidden;
-  }
-
-  .map-card iframe {
-    display: block;
-    width: 100%;
-    height: 600px;
-    border: 0;
-  }
+  .map-card { padding: 0; overflow: hidden; }
+  #map { width: 100%; height: 600px; }
 </style>
 </head>
 
@@ -101,21 +91,9 @@
 
     <div class="legend">
       <h4>Price Marker Legend</h4>
-
-      <p>
-        <i class="dot green"></i>
-        Cheapest
-      </p>
-
-      <p>
-        <i class="dot yellow"></i>
-        Average
-      </p>
-
-      <p>
-        <i class="dot red"></i>
-        More Expensive
-      </p>
+      <p><i class="dot green"></i> Cheapest</p>
+      <p><i class="dot yellow"></i> Average</p>
+      <p><i class="dot red"></i> More Expensive</p>
     </div>
 
   </aside>
@@ -126,34 +104,21 @@
 
     <!-- MAP BOX -->
     <div class="card map-card">
-
-      <iframe
-        src="negros-map.html"
-        width="100%"
-        height="600"
-        style="border:0"
-        loading="lazy">
-      </iframe>
-
+      <div id="map"></div>
     </div>
-
 
     <!-- Gas Stations Table -->
     <section class="card" id="tableWrap">
 
       <div class="table-head">
-
         <h3>⛽ Gas Stations Nearby</h3>
-
         <span>
           <span id="showing"></span>
           <a href="#" id="viewAll">View All</a>
         </span>
-
       </div>
 
       <table>
-
         <thead>
           <tr>
             <th>#</th>
@@ -166,9 +131,7 @@
             <th>Action</th>
           </tr>
         </thead>
-
         <tbody id="rows"></tbody>
-
       </table>
 
     </section>
@@ -181,30 +144,16 @@
 
     <section class="card detail" id="detail"></section>
 
-
     <!-- Price History -->
     <section class="card" id="history">
-
-      <h3>
-        Price History
-        <small>(Gasoline 91)</small>
-      </h3>
-
+      <h3>Price History <small>(Gasoline 91)</small></h3>
       <div id="chart"></div>
-
     </section>
-
 
     <!-- Compare -->
     <section class="card" id="compare">
-
-      <h3>
-        ⚖ Compare Fuel Prices
-        <small>Select up to 3 stations</small>
-      </h3>
-
+      <h3>⚖ Compare Fuel Prices <small>Select up to 3 stations</small></h3>
       <table class="cmp">
-
         <thead>
           <tr>
             <th>Station</th>
@@ -213,25 +162,21 @@
             <th>Diesel</th>
           </tr>
         </thead>
-
         <tbody id="cmpRows"></tbody>
-
       </table>
-
     </section>
 
   </aside>
 
 </div>
 
-
-<!-- Leaflet -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<!-- Existing files -->
-<script src="boundary.js"></script>
-<script src="data.js"></script>
-<script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="/data/data.js"></script>
+<script src="maps/map.js"></script>
+<script src="data/table.js"></script>
+<!-- Keep your own gas/script.js below only if it does something else (detail panel, compare, chart).
+     If it also fills #rows or handles the filters, remove that part so nothing runs twice. -->
+<script src="maps/script.js"></script>
 
 </body>
 </html>
