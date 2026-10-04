@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>News Report | Negros Occidental Gas Price Map</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+  /* News page layout (uses the tokens from css/style.css) */
+  .news-layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:22px;max-width:1800px;margin:0 auto;padding:22px 28px 40px}
+  .page-title{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+  .page-title .ico{font-size:38px;line-height:1}
+  .page-title h2{margin:0;font-size:28px;color:var(--navy);letter-spacing:-.01em}
+  .page-title p{margin:2px 0 0;color:var(--muted)}
+
+  /* Thumbnails: gradient shows if the image file is missing */
+  .thumb{position:relative;overflow:hidden;background:linear-gradient(135deg,#2a5db0,var(--navy))}
+  .thumb img{display:block;width:100%;height:100%;object-fit:cover}
+
+  /* Featured update */
+  .featured{display:grid;grid-template-columns:400px minmax(0,1fr);gap:0;padding:0;overflow:hidden}
+  .featured .thumb{min-height:295px;border-radius:0}
+  .featured .thumb span{position:absolute;left:24px;bottom:24px;color:#fff;font-size:30px;font-weight:800;line-height:1.1;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+  .featured .body{padding:22px 24px;display:flex;flex-direction:column;gap:10px}
+  .tag{align-self:flex-start;padding:4px 12px;border-radius:999px;background:#fde8ea;color:var(--red);font-size:12px;font-weight:700}
+  .featured h3{margin:0;font-size:26px;text-transform:none;letter-spacing:-.01em;color:var(--navy)}
+  .featured p{margin:0;color:var(--muted);font-size:15px;max-width:440px}
+  .date{color:var(--muted);font-size:13px}
+  .featured .foot{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:auto}
+  .price-tile{padding:9px 14px;border-radius:var(--radius-sm);border:1px solid var(--line);min-width:150px}
+  .price-tile small{display:flex;align-items:center;gap:6px;color:#3a4a63;font-weight:600}
+  .price-tile b{display:block;font-size:18px;margin-top:2px;font-variant-numeric:tabular-nums}
+  .price-tile.g91{background:var(--green-soft);border-color:#bfe6cd}
+  .price-tile.g95{background:#fde8ea;border-color:#f5c3c8}
+  .price-tile.d{background:#fff4dc;border-color:#f5dca0}
+  .btn{display:inline-block;padding:11px 18px;border:0;border-radius:var(--radius-sm);background:var(--blue);color:#fff;font-weight:600;text-decoration:none;margin-left:auto;transition:background var(--ease)}
+  .btn:hover{background:var(--blue-dark)}
+
+  /* Category cards */
+  .cats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:20px}
+  .cat{display:flex;flex-direction:column;gap:12px;padding:16px}
+  .cat header{all:unset;display:flex;align-items:center;gap:10px;font-weight:700;color:var(--text)}
+  .cat header i{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;font-style:normal;font-size:16px}
+  .cat header em{margin-left:auto;font-style:normal;color:var(--muted)}
+  .cat .thumb{height:110px;border-radius:var(--radius-sm)}
+  .cat p{margin:0;color:var(--muted);flex:1}
+  .cat .date{font-size:12px}
+  .more{color:var(--blue);font-weight:600;text-decoration:none}
+  .more:hover{text-decoration:underline}
+  .c-fuel i{background:var(--green)}.c-road i{background:var(--blue)}.c-ann i{background:#7a4de0}.c-svc i{background:#f07a1a}
+
+  /* Sidebar */
+  .stay{background:linear-gradient(135deg,#e3eefc,#f1f6fe);border-color:#d3e2f8}
+  .stay h3{display:flex;align-items:center;gap:10px;margin:0 0 8px;font-size:22px;text-transform:none;letter-spacing:0;color:var(--navy)}
+  .stay p{margin:0 0 16px;color:#48586f}
+  .notify{display:flex;align-items:center;gap:12px;width:100%;padding:14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);color:var(--blue);font-weight:600;text-align:left}
+  .notify:hover{background:var(--blue-soft)}
+  .notify em{margin-left:auto;font-style:normal}
+  .prev-head{display:flex;justify-content:space-between;align-items:center}
+  .prev-head h3{margin:0;font-size:18px;text-transform:none;letter-spacing:0;color:var(--navy)}
+  .prev-list{list-style:none;margin:10px 0 0;padding:0}
+  .prev-list li{border-bottom:1px solid var(--line)}
+  .prev-list li:last-child{border-bottom:0}
+  .prev-list a{display:flex;align-items:center;gap:14px;padding:13px 4px;color:var(--text);text-decoration:none}
+  .prev-list a:hover{background:var(--bg)}
+  .prev-list small{display:block;color:var(--muted)}
+  .prev-list b{font-weight:600}
+  .prev-list .dot{width:10px;height:10px}
+  .prev-list em{margin-left:auto;font-style:normal;color:var(--muted)}
+  .dot.orange{background:#f07a1a}.dot.blue{background:var(--blue)}
+
+  @media (max-width:1400px){.cats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:1100px){.news-layout{grid-template-columns:1fr}}
+  @media (max-width:760px){
+    .news-layout{padding:14px}
+    .featured{grid-template-columns:1fr}
+    .featured .thumb{min-height:200px}
+    .cats{grid-template-columns:1fr}
+    .btn{margin-left:0}
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo"><img src="images/gaslogo.png" alt="Negros Occidental Gas Price Map logo" width="56" height="56"></span>
+    <div>
+      <h1>Negros Occidental Gas Price Map</h1>
+      <p>Compare fuel prices. Save more. Drive smarter.</p>
+    </div>
+  </div>
+
+  <nav>
+    <button data-href="index.html#map">🗺 Map</button>
+    <button data-href="index.html#history">📈 Price History</button>
+    <button class="active" data-href="news.html">📰 News Report</button>
+    <button data-href="services.html">🛠️ Gas Stations Services</button>
+  </nav>
+</header>
+
+<div class="news-layout">
+
+  <!-- Main column -->
+  <main>
+
+    <div class="page-title">
+      <span class="ico">📰</span>
+      <div>
+        <h2>News Report</h2>
+        <p>Latest fuel price updates, announcements, and road information in Negros Occidental.</p>
+      </div>
+    </div>
+
+    <!-- Featured update -->
+    <section class="card featured">
+      <div class="thumb">
+        <img id="featImg" alt="" onerror="this.remove()">
+        <span>Fuel Prices<br>Update</span>
+      </div>
+      <div class="body">
+        <span class="tag">🔥 Featured update</span>
+        <h3 id="featTitle">Fuel Price Update</h3>
+        <p id="featText">Fuel prices across selected stations in Negros Occidental have been updated. Keep checking for the latest rates and plan your trip wisely.</p>
+        <div class="date">📅 Updated: <span id="featDate">October 3, 2026</span></div>
+        <div class="foot">
+          <div class="price-tile g91"><small><i class="dot green"></i>Gasoline 91</small><b>₱ <span id="fG91">56.20</span> /L</b></div>
+          <div class="price-tile g95"><small><i class="dot red"></i>Gasoline 95</small><b>₱ <span id="fG95">59.80</span> /L</b></div>
+          <div class="price-tile d"><small><i class="dot yellow"></i>Diesel</small><b>₱ <span id="fD">53.70</span> /L</b></div>
+          <a class="btn" id="featLink" href="#">Read Full Report →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <div class="cats" id="cats"></div>
+
+  </main>
+
+  <!-- Sidebar -->
+  <aside class="side">
+
+    <section class="card stay">
+      <h3>📣 Stay Updated</h3>
+      <p>Get the latest fuel prices, road conditions, and station news in Negros Occidental.</p>
+      <button class="notify" id="notifyBtn"><span>✉️</span>Turn on notifications<em>›</em></button>
+    </section>
+
+    <section class="card">
+      <div class="prev-head">
+        <h3>📄 Previous Reports</h3>
+        <a class="more" href="#">View All →</a>
+      </div>
+      <ul class="prev-list" id="prevList"></ul>
+    </section>
+
+  </aside>
+
+</div>
+
+<script src="news/news.js"></script>
+<script>
+  // Header navigation
+  document.querySelectorAll("nav button[data-href]").forEach(function (b) {
+    b.addEventListener("click", function () { location.href = b.dataset.href; });
+  });
+
+  // Browser notifications (needs localhost or HTTPS)
+  document.getElementById("notifyBtn").addEventListener("click", function () {
+    if (!("Notification" in window)) { alert("Your browser doesn't support notifications."); return; }
+    Notification.requestPermission().then(function (p) {
+      if (p === "granted") new Notification("Notifications on", { body: "You'll get fuel price updates here." });
+    });
+  });
+</script>
+
+</body>
+</html>
