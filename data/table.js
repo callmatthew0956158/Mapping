@@ -72,6 +72,14 @@
       Gas 91: ${money(s.g91)}<br>Gas 95: ${money(s.g95)}<br>Diesel: ${money(s.d)}</small>${dir}</div>`;
   }
 
+  // Service chips above the map (Open 24 hours, store, mechanic, air/water)
+  function svcOk(s) {
+    return [...document.querySelectorAll("#svcChips .chip.on")].every((c) => {
+      const k = c.dataset.svc;
+      return k === "h24" ? /24/.test(s.hours || "") : !!s[k];
+    });
+  }
+
   function getList() {
     const fuels = activeFuels();
     const q = $("search").value.trim().toLowerCase();
@@ -89,7 +97,8 @@
       .filter(({ s, price }) =>
         price != null && price >= lo && price <= hi &&
         (!city || s.city === city) &&
-        (!q || `${s.name} ${s.city || ""}`.toLowerCase().includes(q)));
+        (!q || `${s.name} ${s.city || ""}`.toLowerCase().includes(q)) &&
+        svcOk(s));
 
     list.sort((a, b) => {
       if (sort === "desc") return b.price - a.price;
@@ -115,6 +124,8 @@
       const color = price <= min + third ? COLORS.cheap : price <= min + 2 * third ? COLORS.mid : COLORS.high;
       const m = L.marker([s.lat, s.lng], { icon: pinIcon(color) })
         .bindPopup(popupHtml(s))
+        .on("click", () => document.dispatchEvent(
+          new CustomEvent("station:select", { detail: { index: i, station: s } })))
         .addTo(layer);
       markers.set(i, m);
     });
@@ -178,6 +189,8 @@
     const list = getList();
     renderMarkers(list);
     renderTable(list);
+    const sc = $("svcCount");
+    if (sc) sc.textContent = loaded ? `Showing ${list.length} of ${all.length} stations` : "";
   }
 
   // Fill the city dropdown from the data (safe to call again after a reload)
@@ -204,6 +217,8 @@
         loaded = true;
         fillCities();
         render();
+        window.gasStations = all; // the savings calculator reads this
+        document.dispatchEvent(new CustomEvent("stations:loaded", { detail: all }));
       })
       .catch((err) => {
         console.error("Could not load stations:", err);
@@ -247,6 +262,10 @@
   document.querySelectorAll(".fuel").forEach((c) => c.addEventListener("change", render));
   ["minP", "maxP"].forEach((id) =>
     $(id).addEventListener("input", () => { syncRange(id); render(); }));
+
+  // Service chips
+  document.querySelectorAll("#svcChips .chip").forEach((c) =>
+    c.addEventListener("click", () => { c.classList.toggle("on"); render(); }));
 
   // "Find near me" button on the map
   document.addEventListener("gas:locate", (e) => {

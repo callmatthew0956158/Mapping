@@ -1,0 +1,213 @@
+/* Services chips + savings calculator (add after style.css and detail.css) */
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px
+}
+.svc-card{
+  padding:14px 16px;
+  margin-bottom:14px
+}
+.svc-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:8px;
+  margin-bottom:10px
+}
+.svc-head h3{margin:0;
+  font-size:15px;
+  text-transform:none;
+  letter-spacing:0;
+  color:var(--text)
+}
+.svc-head span{
+  color:var(--muted);
+  font-size:13px
+}
+.svc-card .chips{
+  margin:0
+}
+.chip{
+  padding:7px 14px;
+  border:1px solid var(--line-2);
+  border-radius:999px;
+  background:#fff;
+  color:#3a4a63;
+  font-weight:500;
+  transition:background var(--ease),color var(--ease),border-color var(--ease)
+}
+.chip:hover{
+  border-color:var(--blue);
+  color:var(--blue)
+}
+.chip.on{background:var(--blue);
+  border-color:var(--blue);
+  color:#fff
+}
+
+.calc{
+  padding:0;
+  overflow:hidden;
+  background:#fff
+}
+.calc-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:16px 18px;
+  background:linear-gradient(135deg,#e3eefc,#f1f6fe)
+}
+.calc-ico{display:grid;
+  place-items:center;
+  flex:none;
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  background:var(--blue);
+  font-size:22px
+}
+.calc-head h3{margin:0;
+  font-size:20px;
+  text-transform:none;
+  letter-spacing:-.01em;
+  color:var(--navy)
+}
+
+.calc-head p{margin:2px 0 0;
+  color:#48586f
+}
+.calc-body{
+  padding:16px 18px 18px
+}
+.calc-fuels{
+  display:flex;
+  gap:6px;
+  margin-bottom:14px
+}
+.calc-fuels button{
+  flex:1;
+  padding:7px 4px;
+  border:1px solid var(--line-2);
+  border-radius:var(--radius-sm);
+  background:#fff;font-weight:600;color:#3a4a63
+}
+.calc-fuels button.on{
+  background:var(--blue-soft);
+  border-color:var(--blue);color:var(--blue)
+}
+.calc-station{
+  margin-bottom:14px
+}
+.calc-label{
+  display:block;
+  font-weight:700;
+  color:var(--navy);
+  margin-bottom:8px
+}
+.calc-input{
+  display:flex;
+  align-items:center;
+  border:1px solid var(--line-2);
+  border-radius:var(--radius-sm);
+  overflow:hidden
+}
+.calc-input:focus-within{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px var(--blue-soft)
+}
+.calc-input span{
+  display:grid;
+  place-items:center;
+  width:48px;
+  align-self:stretch;
+  background:var(--blue-soft);
+  font-size:18px
+}
+.calc-input input{
+  flex:1;
+  min-width:0;
+  border:0;
+  outline:0;
+  padding:12px;
+  font-size:18px;
+  font-weight:700;
+  color:var(--navy);
+  background:none
+}
+.calc-input em{
+  padding:0 16px;
+  font-style:normal;
+  color:var(--muted);
+  font-weight:600
+}
+.calc-err{
+  min-height:18px;
+  margin-top:4px;
+  color:var(--red);
+  font-size:12px
+}
+.calc-body h4{margin:6px 0 10px;font-size:16px;color:var(--navy)}
+.calc-res,.calc-save{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  border-radius:var(--radius);
+  margin-bottom:10px;
+  border:1px solid}
+.calc-res .ri,.calc-save .ri{
+  flex:none;
+  font-size:30px
+}
+.calc-res .rm,.calc-save .rm{
+  flex:1;min-width:0
+}
+.rm small{
+  display:block;
+  font-weight:700;
+  font-size:13px
+}
+.rm b{
+  display:block;
+  font-size:22px;
+  color:var(--navy);
+  font-variant-numeric:tabular-nums
+}
+.rm span{
+  color:var(--muted);font-size:12px
+}
+.calc-res .rs{
+  flex:none;
+  max-width:42%;
+  padding-left:12px;
+  border-left:1px solid rgba(0,0,0,.12);
+  font-size:12px;
+  color:#48586f}
+.calc-res .rs span{
+  display:block
+}
+.calc-res.cheap{
+  background:var(--green-soft);border-color:#bfe6cd
+}.cheap small{color:var(--green)
+}
+.calc-res.exp{
+  background:#fdecee;border-color:#f5c3c8
+}.exp small{color:var(--red)
+}
+.calc-res.sel{
+  background:var(--blue-soft);border-color:#cfe0fa}.sel small{color:var(--blue)}
+.calc-save{
+  background:var(--blue-soft);border-color:#cfe0fa
+}.calc-save small
+{color:var(--navy);font-size:15px
+}
+.calc-btn{
+  width:100%;margin-top:4px;padding:13px;border:0;border-radius:var(--radius-sm);background:var(--blue-dark);color:#fff;font-weight:700;
+  transition:background var(--ease)
+}
+.calc-btn:hover{
+  background:var(--blue)
+}

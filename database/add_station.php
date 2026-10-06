@@ -1,5 +1,5 @@
 <?php
-// Page for adding gas stations by hand. Open: http://localhost/gasprices/php/add_station.php
+// Page for adding gas stations by hand. Open: http://localhost/gasprices/database/add_station.php
 session_start();
 require_once __DIR__ . "/db.php";
 

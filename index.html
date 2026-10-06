@@ -8,6 +8,8 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/detail.css">
+<link rel="stylesheet" href="css/extras.css">
 
 <style>
   .map-card { padding: 0; overflow: hidden; }
@@ -112,6 +114,20 @@
   <!-- Main content -->
   <main>
 
+    <!-- Services filter chips -->
+    <section class="card svc-card">
+      <div class="svc-head">
+        <h3>🎚 Filter by services</h3>
+        <span id="svcCount"></span>
+      </div>
+      <div class="chips" id="svcChips">
+        <button type="button" class="chip" data-svc="h24">🕒 Open 24 hours</button>
+        <button type="button" class="chip" data-svc="store">🏪 Convenience store</button>
+        <button type="button" class="chip" data-svc="mechanic">🔧 Mechanic shop</button>
+        <button type="button" class="chip" data-svc="airwater">💨 Air / water</button>
+      </div>
+    </section>
+
     <!-- MAP BOX -->
     <div class="card map-card">
       <div id="map"></div>
@@ -154,27 +170,44 @@
 
     <section class="card detail" id="detail"></section>
 
-    <!-- Price History -->
-    <section class="card" id="history">
-      <h3>Price History <small>(Gasoline 91)</small></h3>
-      <div id="chart"></div>
+    <!-- Savings calculator -->
+    <section class="card calc" id="calc">
+      <div class="calc-head">
+        <span class="calc-ico">🧮</span>
+        <div><h3>Savings Calculator</h3><p>Find out how much you can save!</p></div>
+      </div>
+      <div class="calc-body">
+        <div class="calc-fuels" id="calcFuels">
+          <button type="button" class="on" data-f="g91">Gas 91</button>
+          <button type="button" data-f="g95">Gas 95</button>
+          <button type="button" data-f="d">Diesel</button>
+        </div>
+        <label class="calc-label" for="calcStation">Choose a station:</label>
+        <select id="calcStation" class="calc-station"><option value="">All stations (cheapest vs most expensive)</option></select>
+        <label class="calc-label" for="calcL">Enter how many liters you need:</label>
+        <div class="calc-input"><span>⛽</span><input id="calcL" type="number" min="1" max="500" value="20"><em>L</em></div>
+        <div class="calc-err" id="calcErr"></div>
+
+        <h4>Estimated Cost</h4>
+        <div class="calc-res cheap">
+          <span class="ri">⛽</span>
+          <div class="rm"><small>Cheapest Station</small><b id="cLo">—</b><span id="cLoL"></span></div>
+          <div class="rs"><span id="cLoN">—</span><span id="cLoC"></span></div>
+        </div>
+        <div class="calc-res exp" id="cHiCard">
+          <span class="ri">⛽</span>
+          <div class="rm"><small id="cHiT">Most Expensive Station</small><b id="cHi">—</b><span id="cHiL"></span></div>
+          <div class="rs"><span id="cHiN">—</span><span id="cHiC"></span></div>
+        </div>
+        <div class="calc-save">
+          <span class="ri">💰</span>
+          <div class="rm"><small>You Can Save</small><b id="cSave">—</b><span id="cSaveSub">(with the cheapest station)</span></div>
+        </div>
+        <button type="button" class="calc-btn" id="calcBtn">🧮 Calculate Again</button>
+      </div>
     </section>
 
-    <!-- Compare -->
-    <section class="card" id="compare">
-      <h3>⚖ Compare Fuel Prices <small>Select up to 3 stations</small></h3>
-      <table class="cmp">
-        <thead>
-          <tr>
-            <th>Station</th>
-            <th>Gas 91</th>
-            <th>Gas 95</th>
-            <th>Diesel</th>
-          </tr>
-        </thead>
-        <tbody id="cmpRows"></tbody>
-      </table>
-    </section>
+
 
   </aside>
 
@@ -185,6 +218,8 @@
 <script src="data/table.js"></script>
 <!-- Keep maps/script.js only if it does something else (detail panel, compare, chart).
      If it also fills #rows or handles the filters, remove that part so nothing runs twice. -->
+<script src="maps/detail.js"></script>
+<script src="calc/calc.js"></script>
 <script src="maps/script.js"></script>
 
 </body>
