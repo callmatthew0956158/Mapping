@@ -1,0 +1,131 @@
+/* Compare Prices page (add after style.css) */
+
+.cmp-layout{
+  max-width:1100px;
+  margin:0 auto;
+  padding:22px 28px 40px
+}
+
+.page-title{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:18px
+}
+
+.page-title .ico{
+  font-size:38px;
+  line-height:1
+}
+
+.page-title h2{
+  margin:0;
+  font-size:28px;
+  color:var(--navy);
+  letter-spacing:-.01em
+}
+
+.page-title p{
+  margin:2px 0 0;
+  color:var(--muted)
+}
+
+.cmp-card{
+  padding:18px
+}
+
+.cmp-scroll{
+  overflow-x:auto;
+  padding-bottom:4px
+}
+
+.cmp-grid{
+  display:grid;
+  grid-template-columns:150px repeat(3,minmax(180px,1fr));
+  gap:10px;
+  align-items:center;
+  min-width:720px
+}
+
+.cmp-row{
+  margin-top:10px
+}
+
+.cmp-lab{
+  color:var(--muted);
+  font-weight:600
+}
+
+.cmp-cell{
+  padding:12px 8px;
+  border-radius:var(--radius-sm);
+  background:var(--bg);
+  text-align:center;
+  font-size:16px;
+  font-weight:700;
+  font-variant-numeric:tabular-nums
+}
+
+.cmp-cell.plain{
+  background:none;
+  font-size:14px;
+  font-weight:500
+}
+
+.cmp-cell.best{
+  background:var(--green-soft);
+  color:var(--green)
+}
+
+.cmp-cell.best small{
+  display:block;
+  font-size:11px;
+  font-weight:600
+}
+
+.cmp-cell a{
+  color:var(--blue);
+  font-weight:600;
+  text-decoration:none
+}
+
+.cmp-cell a:hover{
+  text-decoration:underline
+}
+
+.cmp-sep{
+  height:1px;
+  background:var(--line);
+  margin:16px 0 6px
+}
+
+.cmp-yes{
+  color:var(--green);
+  font-weight:600
+}
+
+.cmp-no{
+  color:var(--muted)
+}
+
+.cmp-empty{
+  margin:24px 0;
+  text-align:center;
+  color:var(--muted)
+}
+
+.cmp-bad{
+  color:#b00020
+}
+
+.cmp-note{
+  margin:16px 0 0;
+  color:var(--muted);
+  font-size:12px
+}
+
+@media (max-width:760px){
+  .cmp-layout{
+    padding:14px
+  }
+}

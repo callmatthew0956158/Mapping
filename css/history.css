@@ -1,0 +1,156 @@
+/* Price History page (add after style.css and nav.css) */
+
+.hist-layout{
+  max-width:1100px;
+  margin:0 auto;
+  padding:22px 28px 40px
+}
+
+.page-title{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:18px
+}
+
+.page-title .ico{
+  font-size:38px;
+  line-height:1
+}
+
+.page-title h2{
+  margin:0;
+  font-size:28px;
+  color:var(--navy);
+  letter-spacing:-.01em
+}
+
+.page-title p{
+  margin:2px 0 0;
+  color:var(--muted)
+}
+
+.hist-tiles{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:14px
+}
+
+.hist-tile{
+  padding:14px 16px
+}
+
+.hist-tile .lab{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--muted);
+  font-weight:600
+}
+
+.hist-tile .val{
+  display:block;
+  margin:6px 0 2px;
+  font-size:26px;
+  font-weight:700;
+  color:var(--navy);
+  font-variant-numeric:tabular-nums
+}
+
+.hist-tile .chg{
+  font-size:13px;
+  font-weight:600;
+  color:var(--muted)
+}
+
+.hist-tile .chg.up{
+  color:var(--red)
+}
+
+.hist-tile .chg.down{
+  color:var(--green)
+}
+
+.hist-card{
+  padding:18px
+}
+
+.hist-bar{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px
+}
+
+.hist-bar select{
+  width:auto;
+  min-width:260px;
+  max-width:100%
+}
+
+.hist-fuels{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px
+}
+
+.hist-fuels button{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 14px;
+  border:1px solid var(--line-2);
+  border-radius:999px;
+  background:#fff;
+  color:#3a4a63;
+  font-weight:500;
+  opacity:.6
+}
+
+.hist-fuels button.on{
+  background:var(--blue-soft);
+  border-color:var(--blue);
+  color:var(--blue);
+  opacity:1
+}
+
+.hist-fuels i{
+  display:inline-block;
+  width:9px;
+  height:9px;
+  border-radius:50%
+}
+
+#chart{
+  display:block;
+  width:100%;
+  height:auto
+}
+
+.hist-note{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:12px
+}
+
+.hist-note.bad{
+  color:#b00020
+}
+
+@media (max-width:760px){
+  .hist-layout{
+    padding:14px
+  }
+
+  .hist-tiles{
+    grid-template-columns:1fr
+  }
+
+  .hist-bar select{
+    min-width:0;
+    width:100%
+  }
+}

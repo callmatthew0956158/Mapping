@@ -10,7 +10,7 @@ $num = fn($v) => $v === null ? null : (float)$v;
 try {
     $rows = db()->query(
         "SELECT id, name, city, lat, lng, g91, g95, diesel,
-                address, hours, image, logo, store, mechanic, airwater,
+                address, hours, image, logo, store, mechanic, airwater, cr,
                 DATE_FORMAT(updated, '%b. %e, %Y') AS updated
          FROM stations
          ORDER BY name"
@@ -33,6 +33,7 @@ try {
         "store"    => (bool)$r["store"],
         "mechanic" => (bool)$r["mechanic"],
         "airwater" => (bool)$r["airwater"],
+        "cr"       => (bool)$r["cr"],
     ], $rows);
 
     echo json_encode($out);

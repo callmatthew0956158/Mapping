@@ -8,8 +8,9 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/detail.css">
+<link rel="stylesheet" href="css/detail.css?v=2">
 <link rel="stylesheet" href="css/extras.css">
+<link rel="stylesheet" href="css/nav.css">
 
 <style>
   .map-card { padding: 0; overflow: hidden; }
@@ -38,10 +39,10 @@
   </div>
 
   <nav>
-    <button class="active" data-go="map">🗺 Map</button>
-    <button data-go="history">📈 Price History </button>
-    <button data-go="compare">📰 News Report</button>
-    <button id="navReport">🛠️Gas Stations Services</button>
+    <a class="active" href="#map">🗺 Map</a>
+    <a href="history.html">📈 Price History</a>
+    <a href="news.html">📰 News Report</a>
+    <a href="compare.html">⚖ Compare Prices</a>
   </nav>
 </header>
 
@@ -113,20 +114,6 @@
 
   <!-- Main content -->
   <main>
-
-    <!-- Services filter chips -->
-    <section class="card svc-card">
-      <div class="svc-head">
-        <h3>🎚 Filter by services</h3>
-        <span id="svcCount"></span>
-      </div>
-      <div class="chips" id="svcChips">
-        <button type="button" class="chip" data-svc="h24">🕒 Open 24 hours</button>
-        <button type="button" class="chip" data-svc="store">🏪 Convenience store</button>
-        <button type="button" class="chip" data-svc="mechanic">🔧 Mechanic shop</button>
-        <button type="button" class="chip" data-svc="airwater">💨 Air / water</button>
-      </div>
-    </section>
 
     <!-- MAP BOX -->
     <div class="card map-card">
@@ -207,7 +194,20 @@
       </div>
     </section>
 
-
+    <!-- Services filter chips -->
+    <section class="card svc-card">
+      <div class="svc-head">
+        <h3>🎚 Filter by services</h3>
+        <span id="svcCount"></span>
+      </div>
+      <div class="chips" id="svcChips">
+        <button type="button" class="chip" data-svc="h24">🕒 Open 24 hours</button>
+        <button type="button" class="chip" data-svc="store">🏪 Convenience store</button>
+        <button type="button" class="chip" data-svc="mechanic">🔧 Mechanic shop</button>
+        <button type="button" class="chip" data-svc="airwater">💨 Air / water</button>
+        <button type="button" class="chip" data-svc="cr">🚻 Comfort room</button>
+      </div>
+    </section>
 
   </aside>
 
@@ -218,7 +218,7 @@
 <script src="data/table.js"></script>
 <!-- Keep maps/script.js only if it does something else (detail panel, compare, chart).
      If it also fills #rows or handles the filters, remove that part so nothing runs twice. -->
-<script src="maps/detail.js"></script>
+<script src="maps/detail.js?v=2"></script>
 <script src="calc/calc.js"></script>
 <script src="maps/script.js"></script>
 

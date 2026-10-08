@@ -2,8 +2,8 @@
 (function () {
   "use strict";
 
-  const NEWS_URL = "news.html";         // News Report page
-  const SERVICES_URL = "services.html"; // change this to your Gas Stations Services page
+  const NEWS_URL = "news.html";       // News Report page
+  const COMPARE_URL = "compare.html"; // Compare Prices page
 
   const buttons = document.querySelectorAll("nav button");
 
@@ -15,12 +15,12 @@
     btn.addEventListener("click", () => {
       const go = btn.dataset.go;
 
-      if (go === "compare") {            // 📰 News Report
+      if (go === "news") {               // 📰 News Report
         location.href = NEWS_URL;
         return;
       }
-      if (btn.id === "navReport") {      // 🛠️ Gas Stations Services
-        location.href = SERVICES_URL;
+      if (btn.id === "navCompare") {     // ⚖ Compare Prices
+        location.href = COMPARE_URL;
         return;
       }
 

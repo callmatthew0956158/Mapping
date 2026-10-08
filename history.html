@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price History | Negros Occidental Gas Price Map</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/history.css">
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo"><img src="images/gaslogo.png" alt="Negros Occidental Gas Price Map logo" width="56" height="56"></span>
+    <div>
+      <h1>Negros Occidental Gas Price Map</h1>
+      <p>Compare fuel prices. Save more. Drive smarter.</p>
+    </div>
+  </div>
+
+  <nav>
+    <a href="index.html#map">🗺 Map</a>
+    <a class="active" href="history.html">📈 Price History</a>
+    <a href="news.html">📰 News Report</a>
+    <a href="compare.html">⚖ Compare Prices</a>
+  </nav>
+</header>
+
+<div class="hist-layout">
+
+  <div class="page-title">
+    <span class="ico">📈</span>
+    <div>
+      <h2>Price History</h2>
+      <p>See how fuel prices changed over time.</p>
+    </div>
+  </div>
+
+  <div class="hist-tiles" id="tiles"></div>
+
+  <section class="card hist-card">
+    <div class="hist-bar">
+      <select id="histStation" aria-label="Station">
+        <option value="">All stations (average)</option>
+      </select>
+      <div class="hist-fuels" id="fuelChips"></div>
+    </div>
+    <svg id="chart" viewBox="0 0 640 260" role="img" aria-label="Line chart of fuel prices over time"></svg>
+    <p class="hist-note" id="histNote">Loading price history...</p>
+  </section>
+
+</div>
+
+<script>
+// Price History: summary tiles and a line chart of the saved price changes
+(function () {
+  "use strict";
+
+  const HISTORY_URL = "database/history.php"; // path is relative to history.html
+  const FUELS = [
+    { key: "g91", label: "Gasoline 91", color: "#0f9d3f", on: true },
+    { key: "g95", label: "Gasoline 95", color: "#e0202b", on: true },
+    { key: "d", label: "Diesel", color: "#f5a300", on: true }
+  ];
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const peso = (v) => "₱" + v.toFixed(2);
+  const fmtDate = (d) => { const p = d.split("-"); return MONTHS[Number(p[1]) - 1] + " " + Number(p[2]); };
+
+  let rows = [];        // saved prices, oldest first
+  let stationId = "";   // "" = all stations (average)
+
+  // Prices over time for one fuel. Each date uses the latest saved price of every station up to that date.
+  function buildSeries(fuelKey) {
+    const relevant = stationId ? rows.filter((r) => String(r.sid) === stationId) : rows;
+    const dates = [...new Set(relevant.map((r) => r.day))].sort();
+    const latest = new Map();
+    const pts = [];
+    let i = 0;
+    dates.forEach((day) => {
+      while (i < relevant.length && relevant[i].day <= day) { latest.set(relevant[i].sid, relevant[i]); i++; }
+      const vals = [...latest.values()].map((r) => r[fuelKey]).filter((v) => v != null);
+      if (vals.length) pts.push({ day, v: vals.reduce((a, b) => a + b, 0) / vals.length });
+    });
+    return pts;
+  }
+
+  function renderTiles(all) {
+    $("tiles").innerHTML = FUELS.map((f, n) => {
+      const pts = all[n];
+      if (!pts.length) {
+        return `<div class="card hist-tile"><span class="lab"><i class="dot" style="background:${f.color}"></i>${f.label}</span>
+          <b class="val">—</b><span class="chg">No data yet</span></div>`;
+      }
+      const first = pts[0], last = pts[pts.length - 1];
+      const diff = last.v - first.v;
+      let chg = '<span class="chg">no change yet</span>';
+      if (pts.length > 1 && diff > 0.005) chg = `<span class="chg up">▲ ${peso(diff)} since ${fmtDate(first.day)}</span>`;
+      else if (pts.length > 1 && diff < -0.005) chg = `<span class="chg down">▼ ${peso(-diff)} since ${fmtDate(first.day)}</span>`;
+      else if (pts.length > 1) chg = '<span class="chg">no change</span>';
+      return `<div class="card hist-tile"><span class="lab"><i class="dot" style="background:${f.color}"></i>${f.label}</span>
+        <b class="val">${peso(last.v)}</b>${chg}</div>`;
+    }).join("");
+  }
+
+  function renderChips() {
+    $("fuelChips").innerHTML = FUELS.map((f, i) =>
+      `<button type="button" data-i="${i}" class="${f.on ? "on" : ""}"><i style="background:${f.color}"></i>${f.label}</button>`
+    ).join("");
+  }
+
+  function niceStep(raw) {
+    return [0.5, 1, 2, 5, 10, 20, 50].find((s) => s >= raw) || 50;
+  }
+
+  function renderChart(all) {
+    const W = 640, H = 260, X0 = 52, X1 = 620, Y0 = 16, Y1 = 220;
+    const shown = all.map((pts, n) => (FUELS[n].on ? pts : []));
+    const flat = shown.flat();
+    if (!flat.length) { $("chart").innerHTML = ""; return; }
+
+    const vmin = Math.min(...flat.map((p) => p.v)), vmax = Math.max(...flat.map((p) => p.v));
+    const pad = Math.max(1, (vmax - vmin) * 0.15);
+    const step = niceStep((vmax - vmin + 2 * pad) / 4);
+    const lo = Math.floor((vmin - pad) / step) * step, hi = Math.ceil((vmax + pad) / step) * step;
+
+    const days = [...new Set(flat.map((p) => p.day))].sort();
+    const t0 = Date.parse(days[0]), t1 = Date.parse(days[days.length - 1]);
+    const x = (day) => (t1 === t0 ? (X0 + X1) / 2 : X0 + ((Date.parse(day) - t0) / (t1 - t0)) * (X1 - X0));
+    const y = (v) => Y1 - ((v - lo) / (hi - lo)) * (Y1 - Y0);
+
+    let s = "";
+    for (let t = lo; t <= hi + 1e-9; t += step) {
+      s += `<line x1="${X0}" x2="${X1}" y1="${y(t)}" y2="${y(t)}" stroke="#e4e9f2" stroke-width="1"/>
+            <text x="${X0 - 8}" y="${y(t) + 4}" text-anchor="end" fill="#66758c" font-size="11">${t}</text>`;
+    }
+    const every = Math.ceil(days.length / 6);
+    days.forEach((d, i) => {
+      if (i % every === 0 || i === days.length - 1) {
+        s += `<text x="${x(d)}" y="${H - 22}" text-anchor="middle" fill="#66758c" font-size="11">${fmtDate(d)}</text>`;
+      }
+    });
+    shown.forEach((pts, n) => {
+      if (!pts.length) return;
+      const f = FUELS[n];
+      if (pts.length > 1) {
+        s += `<polyline points="${pts.map((p) => x(p.day) + "," + y(p.v)).join(" ")}" fill="none" stroke="${f.color}" stroke-width="2.5" stroke-linejoin="round"/>`;
+      }
+      pts.forEach((p) => {
+        s += `<circle cx="${x(p.day)}" cy="${y(p.v)}" r="4" fill="${f.color}"><title>${f.label}: ${peso(p.v)} on ${fmtDate(p.day)}</title></circle>`;
+      });
+    });
+    $("chart").innerHTML = s;
+  }
+
+  function render() {
+    const all = FUELS.map((f) => buildSeries(f.key));
+    renderTiles(all);
+    renderChart(all);
+    const dayCount = new Set((stationId ? rows.filter((r) => String(r.sid) === stationId) : rows).map((r) => r.day)).size;
+    const note = $("histNote");
+    note.className = "hist-note";
+    note.textContent = !rows.length
+      ? "No saved prices yet. They appear here after the first price update."
+      : dayCount < 2
+        ? "Only one saved price so far. The chart fills in as prices change."
+        : "Based on saved price changes. More points appear as prices are updated.";
+  }
+
+  function load() {
+    return fetch(HISTORY_URL, { cache: "no-store" })
+      .then((r) => r.json().then((j) => { if (!r.ok) throw new Error(j.error || "HTTP " + r.status); return j; }))
+      .then((j) => {
+        rows = j.history || [];
+        $("histStation").innerHTML = '<option value="">All stations (average)</option>' +
+          (j.stations || []).map((s) =>
+            `<option value="${esc(s.id)}">${esc(s.name)}${s.city ? " - " + esc(s.city) : ""}</option>`).join("");
+        $("histStation").value = stationId;
+        render();
+      })
+      .catch((err) => {
+        const note = $("histNote");
+        note.className = "hist-note bad";
+        note.textContent = "Couldn't load " + HISTORY_URL + " (" + err.message + "). Check the file is in your database folder and the price_history table exists.";
+      });
+  }
+
+  $("histStation").addEventListener("change", (e) => { stationId = e.target.value; render(); });
+  $("fuelChips").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    FUELS[Number(b.dataset.i)].on = !FUELS[Number(b.dataset.i)].on;
+    renderChips();
+    render();
+  });
+
+  renderChips();
+  load();
+  window.addEventListener("focus", load);
+})();
+</script>
+</body>
+</html>

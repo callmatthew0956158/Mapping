@@ -11,7 +11,8 @@
   const SERVICES = [
     ["store", "🏪", "Convenience Store"],
     ["mechanic", "🔧", "Mechanic Shop"],
-    ["airwater", "💨", "Air / Water"]
+    ["airwater", "💨", "Air / Water"],
+    ["cr", "🚻", "Comfort Room"]
   ];
   const FUELS = [["g91", "Gasoline 91", "green"], ["g95", "Gasoline 95", "red"], ["d", "Diesel", "yellow"]];
 

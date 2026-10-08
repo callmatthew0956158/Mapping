@@ -1,15 +1,18 @@
 /* Station detail panel (add after style.css) */
+
 .sd-hint{
   margin:0;
   color:var(--muted);
   text-align:center;
   padding:20px 0
 }
+
 .sd-head{
   display:flex;
   align-items:flex-start;
   gap:12px
 }
+
 .sd-logo{
   position:relative;
   flex:none;
@@ -24,6 +27,7 @@
   font-size:22px;
   overflow:hidden
 }
+
 .sd-logo img{
   position:absolute;
   inset:0;
@@ -70,7 +74,7 @@
   font-size:12px;
   font-weight:700
 }
-  
+
 .sd-photo{
   margin-top:14px;
   height:150px;
@@ -88,12 +92,13 @@
   object-fit:cover;
   display:block
 }
-  
+
 .sd-svc{
   display:grid;
-  grid-template-columns:
-  repeat(3,1fr);
-  gap:8px}
+  grid-template-columns:repeat(2,1fr);
+  gap:8px
+}
+
 .sd-svc>div{
   padding:10px 6px;
   border:1px solid var(--line);
@@ -102,6 +107,7 @@
   font-size:12px;
   font-weight:600
 }
+
 .sd-svc b{
   display:block;
   font-size:24px;
@@ -116,8 +122,13 @@
 }
 
 .sd-svc .off{
-  opacity:.55}.sd-svc .off small{
-    color:var(--muted)}
+  opacity:.55
+}
+
+.sd-svc .off small{
+  color:var(--muted)
+}
+
 .sd-fuel{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -141,12 +152,13 @@
 
 .sd-fuel .green{
   background:var(--green)
-}.sd-fuel .red
+}
 
-{
-  background:var(--red)}.sd-fuel .yellow
+.sd-fuel .red{
+  background:var(--red)
+}
 
-{
+.sd-fuel .yellow{
   background:var(--yellow)
 }
 
@@ -156,6 +168,7 @@
   font-size:17px;
   font-variant-numeric:tabular-nums
 }
+
 .sd-go{
   display:flex;
   align-items:center;
@@ -168,9 +181,12 @@
   font-weight:600;
   text-decoration:none
 }
+
 .sd-go:hover{
   background:var(--blue-soft)
 }
+
 .sd-go em{
   margin-left:auto;
-  font-style:normal}
+  font-style:normal
+}
